@@ -122,7 +122,7 @@ class ResPartner(models.Model):
                     break
             partner.current_transaction_price = price
 
-    @api.depends('child_ids.sale_order_ids.state', 'child_ids.sale_order_ids.order_line.price_total', 'child_ids.sale_order_ids.date_order')
+    @api.depends('child_ids.sale_order_ids.state', 'child_ids.sale_order_ids.order_line.price_subtotal', 'child_ids.sale_order_ids.date_order')
     def _compute_paid_transactions_this_year(self):
         from datetime import datetime
         for partner in self:
@@ -147,7 +147,7 @@ class ResPartner(models.Model):
                         if line.product_id.is_signature_pack:
                             # Check if the line has the discount reference
                             if not (hasattr(line, 'name') and 'transaction-plan-upgrade-discount' in (line.name or '')):
-                                total_paid += line.price_total
+                                total_paid += line.price_subtotal
             
             partner.paid_transactions_this_year = total_paid
 
