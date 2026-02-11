@@ -3,11 +3,13 @@ from odoo import models, fields, api
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
+    is_partner = fields.Boolean(string='Is a Partner', default=False)
+    
     partnership_status = fields.Selection([
         ('draft', 'Draft'),
         ('signed', 'Signed'),
         ('terminated', 'Terminated')
-    ], string='Partnership Status', default='draft')
+    ], string='Partnership Status')
 
     partnership_type = fields.Selection([
         ('standard', 'Standard'),

@@ -21,8 +21,14 @@
                     </button>
                 </div>
 
+                <group position="before">
+                    <group>
+                        <field name="is_partner"/>
+                    </group>
+                </group>
+
                 <notebook position="inside">
-                    <page string="Partnership Details" name="partnership_details">
+                    <page string="Partnership Details" name="partnership_details" invisible="not is_partner">
                         <group>
                             <group>
                                 <field name="partnership_status"/>
