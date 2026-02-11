@@ -1,42 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <data>
-        <record id="view_partner_form_inherit_signature" model="ir.ui.view">
-            <field name="name">res.partner.form.inherit.signature</field>
-            <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
-            <field name="arch" type="xml">
-                <div name="button_box" position="inside">
-                    <button name="action_view_child_sales"
-                            type="object"
-                            class="oe_stat_button"
-                            icon="fa-usd"
-                            invisible="signature_transaction_count == 0">
-                        <div class="o_stat_info">
-                            <span class="o_stat_value">
-                                <field name="signature_transaction_count"/>
-                            </span>
-                            <span class="o_stat_text">Signatures</span>
-                        </div>
-                    </button>
-                </div>
+    <record id="view_partner_form_inherit_signature" model="ir.ui.view">
+        <field name="name">res.partner.form.inherit.signature</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="base.view_partner_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button name="action_view_child_sales"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-usd"
+                        invisible="signature_transaction_count == 0">
+                    <div class="o_stat_info">
+                        <span class="o_stat_value">
+                            <field name="signature_transaction_count"/>
+                        </span>
+                        <span class="o_stat_text">Signatures</span>
+                    </div>
+                </button>
+            </div>
 
-                <notebook position="inside">
-                    <page string="Partnership Details" name="partnership_details">
+            <notebook position="inside">
+                <page string="Partnership Details" name="partnership_details">
+                    <group>
                         <group>
-                            <group>
-                                <field name="partnership_status"/>
-                                <field name="partnership_type"/>
-                                <field name="partnership_pdf"/>
-                            </group>
-                            <group>
-                                <field name="signature_transaction_count"/>
-                                <field name="current_transaction_price"/>
-                            </group>
+                            <field name="partnership_status"/>
+                            <field name="partnership_type"/>
+                            <field name="partnership_pdf"/>
                         </group>
-                    </page>
-                </notebook>
-            </field>
-        </record>
-    </data>
+                        <group>
+                            <field name="signature_transaction_count"/>
+                            <field name="current_transaction_price"/>
+                        </group>
+                    </group>
+                </page>
+            </notebook>
+        </field>
+    </record>
 </odoo>
