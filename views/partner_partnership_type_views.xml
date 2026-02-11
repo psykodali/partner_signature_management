@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_partner_partnership_type_tree" model="ir.ui.view">
+            <field name="name">partner.partnership.type.tree</field>
+            <field name="model">partner.partnership.type</field>
+            <field name="arch" type="xml">
+                <list string="Partnership Types" editable="bottom">
+                    <field name="sequence" widget="handle"/>
+                    <field name="name"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_partner_partnership_type_form" model="ir.ui.view">
+            <field name="name">partner.partnership.type.form</field>
+            <field name="model">partner.partnership.type</field>
+            <field name="arch" type="xml">
+                <form string="Partnership Type">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="sequence"/>
+                            <field name="active" widget="boolean_toggle"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_partner_partnership_type" model="ir.actions.act_window">
+            <field name="name">Partnership Types</field>
+            <field name="res_model">partner.partnership.type</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem id="menu_partner_partnership_type"
+                  parent="sale.menu_sale_config"
+                  action="action_partner_partnership_type"
+                  sequence="110"/>
+    </data>
+</odoo>

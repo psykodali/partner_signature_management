@@ -8,7 +8,9 @@
     'data': [
         'security/ir.model.access.csv',
         'data/signature_tier_data.xml',
+        'data/partnership_type_data.xml',
         'views/partner_signature_tier_views.xml',
+        'views/partner_partnership_type_views.xml',
         'views/res_partner_views.xml',
         'views/product_template_views.xml',
     ],

@@ -11,11 +11,7 @@ class ResPartner(models.Model):
         ('terminated', 'Terminated')
     ], string='Partnership Status')
 
-    partnership_type = fields.Selection([
-        ('standard', 'Standard'),
-        ('premium', 'Premium'),
-        ('enterprise', 'Enterprise')
-    ], string='Partnership Type')
+    partnership_type_id = fields.Many2one('partner.partnership.type', string='Partnership Type')
 
     partnership_pdf = fields.Binary(string='Partnership PDF')
 
