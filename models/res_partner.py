@@ -11,7 +11,7 @@ class ResPartner(models.Model):
         ('terminated', 'Terminated')
     ], string='Partnership Status')
 
-    partnership_type_id = fields.Many2one('partner.partnership.type', string='Partnership Type')
+    partnership_type_ids = fields.Many2many('partner.partnership.type', string='Partnership Types')
 
     partnership_pdf = fields.Binary(string='Partnership PDF')
 
