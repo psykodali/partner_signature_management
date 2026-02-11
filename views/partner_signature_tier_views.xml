@@ -5,11 +5,11 @@
             <field name="name">partner.signature.tier.tree</field>
             <field name="model">partner.signature.tier</field>
             <field name="arch" type="xml">
-                <tree string="Signature Tiers" editable="bottom">
+                <list string="Signature Tiers" editable="bottom">
                     <field name="name"/>
                     <field name="min_quantity"/>
                     <field name="transaction_price"/>
-                </tree>
+                </list>
             </field>
         </record>
 
@@ -36,7 +36,7 @@
         <record id="action_partner_signature_tier" model="ir.actions.act_window">
             <field name="name">Partner Signature Tiers</field>
             <field name="res_model">partner.signature.tier</field>
-            <field name="view_mode">tree,form</field>
+            <field name="view_mode">list,form</field>
         </record>
 
         <menuitem id="menu_partner_signature_tier"
