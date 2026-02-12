@@ -38,10 +38,23 @@
                             <group>
                                 <field name="signature_transaction_count" readonly="1"/>
                                 <field name="signature_transaction_count_this_year" readonly="1"/>
+                                <field name="pending_transactions" readonly="1" string="Pending Transactions Order"/>
                                 <field name="client_count" readonly="1"/>
                                 <field name="current_transaction_price" readonly="1"/>
+                                <field name="forecast_transaction_price" readonly="1"/>
                                 <field name="paid_transactions_this_year" readonly="1"/>
                                 <field name="overpaid" readonly="1"/>
+                            </group>
+                        </group>
+                    </page>
+                    
+                    <page string="Subscription Details" name="subscription_details">
+                        <group>
+                            <group>
+                                <field name="own_signature_transaction_count" readonly="1" string="Signature Transaction Count (All Time)"/>
+                                <field name="own_signature_transaction_count_this_year" readonly="1" string="Signature Transaction Count This Year"/>
+                                <field name="own_pending_transactions" readonly="1" string="Pending Transactions Order"/>
+                                <field name="own_paid_transactions_this_year" readonly="1" string="Paid Transactions This Year"/>
                             </group>
                         </group>
                     </page>
