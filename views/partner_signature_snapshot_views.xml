@@ -140,12 +140,40 @@ action = model.create_snapshots()
             </field>
         </record>
 
+        <!-- Direct Action for Update Button (visible as menu item) -->
+        <record id="action_update_snapshots_direct" model="ir.actions.server">
+            <field name="name">⟳ Update Snapshots Now</field>
+            <field name="model_id" ref="model_partner_signature_snapshot"/>
+            <field name="state">code</field>
+            <field name="code">
+model.create_snapshots()
+action = {
+    'type': 'ir.actions.client',
+    'tag': 'display_notification',
+    'params': {
+        'title': 'Success',
+        'message': 'Partner snapshots updated successfully! Refresh the page to see new data.',
+        'type': 'success',
+        'sticky': False,
+        'next': {'type': 'ir.actions.act_window_close'},
+    }
+}
+            </field>
+        </record>
+
         <!-- Menu Item under Sales -->
         <menuitem id="menu_partner_signature_snapshot"
                   name="Partners"
                   parent="sale.sale_menu_root"
                   action="action_partner_signature_snapshot"
                   sequence="50"/>
+
+        <!-- Menu Item for Update Action -->
+        <menuitem id="menu_update_partner_snapshots"
+                  name="⟳ Update Partner Snapshots"
+                  parent="sale.sale_menu_root"
+                  action="action_update_snapshots_direct"
+                  sequence="51"/>
 
     </data>
 </odoo>
