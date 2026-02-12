@@ -55,44 +55,43 @@ class ResPartner(models.Model):
         digits=(10, 2)
     )
     
-    # Own subscription fields (for direct orders on this contact)
-    own_signature_transaction_count = fields.Integer(
-        string='Own Signature Count (All Time)',
-        compute='_compute_own_signature_transaction_count',
-        store=True
-    )
+    # own_signature_transaction_count = fields.Integer(
+    #     string='Own Signature Count (All Time)',
+    #     compute='_compute_own_signature_transaction_count',
+    #     store=True
+    # )
     
-    own_signature_transaction_count_this_year = fields.Integer(
-        string='Own Signature Count This Year',
-        compute='_compute_own_signature_transaction_count_this_year',
-        store=True
-    )
+    # own_signature_transaction_count_this_year = fields.Integer(
+    #     string='Own Signature Count This Year',
+    #     compute='_compute_own_signature_transaction_count_this_year',
+    #     store=True
+    # )
     
-    own_paid_transactions_this_year = fields.Float(
-        string='Own Paid Transactions This Year',
-        compute='_compute_own_paid_transactions_this_year',
-        store=True,
-        digits=(10, 2)
-    )
+    # own_paid_transactions_this_year = fields.Float(
+    #     string='Own Paid Transactions This Year',
+    #     compute='_compute_own_paid_transactions_this_year',
+    #     store=True,
+    #     digits=(10, 2)
+    # )
     
-    own_pending_transactions = fields.Integer(
-        string='Own Pending Transactions',
-        compute='_compute_own_pending_transactions',
-        store=True
-    )
+    # own_pending_transactions = fields.Integer(
+    #     string='Own Pending Transactions',
+    #     compute='_compute_own_pending_transactions',
+    #     store=True
+    # )
     
-    pending_transactions = fields.Integer(
-        string='Pending Transactions (Children)',
-        compute='_compute_pending_transactions',
-        store=True
-    )
+    # pending_transactions = fields.Integer(
+    #     string='Pending Transactions (Children)',
+    #     compute='_compute_pending_transactions',
+    #     store=True
+    # )
     
-    forecast_transaction_price = fields.Float(
-        string='Transaction Price Forecast',
-        compute='_compute_forecast_transaction_price',
-        store=True,
-        digits=(10, 4)
-    )
+    # forecast_transaction_price = fields.Float(
+    #     string='Transaction Price Forecast',
+    #     compute='_compute_forecast_transaction_price',
+    #     store=True,
+    #     digits=(10, 4)
+    # )
 
     @api.depends('child_ids.sale_order_ids.state', 'child_ids.sale_order_ids.order_line.product_id.is_signature_pack')
     def _compute_signature_transaction_count(self):
