@@ -156,11 +156,13 @@ class ResPartner(models.Model):
                 
                 for order in orders:
                     for line in order.order_line:
-                        # Include signature pack lines, exclude discount lines
-                        if line.product_id.is_signature_pack:
-                            # Check if the line has the discount reference
-                            if not (hasattr(line, 'name') and 'transaction-plan-upgrade-discount' in (line.name or '')):
-                                total_paid += line.price_subtotal
+                        # Check if this is a discount line
+                        if hasattr(line, 'name') and line.name and 'transaction-plan-upgrade-discount' in line.name:
+                            # Subtract discount (which is usually negative, so this increases total)
+                            total_paid += line.price_subtotal
+                        # Otherwise, only include signature pack lines
+                        elif line.product_id.is_signature_pack:
+                            total_paid += line.price_subtotal
             
             partner.paid_transactions_this_year = total_paid
 
