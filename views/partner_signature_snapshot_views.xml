@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_partner_signature_snapshot_tree" model="ir.ui.view">
+            <field name="name">partner.signature.snapshot.tree</field>
+            <field name="model">partner.signature.snapshot</field>
+            <field name="arch" type="xml">
+                <list string="Partner Signature Snapshots">
+                    <field name="snapshot_date"/>
+                    <field name="partner_name"/>
+                    <field name="is_partner" optional="hide"/>
+                    <field name="partnership_status" optional="hide"/>
+                    <field name="signature_transaction_count" optional="show"/>
+                    <field name="signature_transaction_count_this_year" optional="show"/>
+                    <field name="client_count" optional="show"/>
+                    <field name="current_transaction_price" optional="show"/>
+                    <field name="pending_transactions" optional="show"/>
+                    <field name="forecast_transaction_price" optional="show"/>
+                    <field name="paid_transactions_this_year" optional="show"/>
+                    <field name="overpaid" optional="show"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_partner_signature_snapshot_form" model="ir.ui.view">
+            <field name="name">partner.signature.snapshot.form</field>
+            <field name="model">partner.signature.snapshot</field>
+            <field name="arch" type="xml">
+                <form string="Partner Signature Snapshot">
+                    <header>
+                        <button name="action_update_all_snapshots" string="Update All Partner Snapshots" type="object" class="oe_highlight"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="snapshot_date"/>
+                                <field name="is_partner"/>
+                                <field name="partnership_status"/>
+                            </group>
+                            <group>
+                                <field name="signature_transaction_count"/>
+                                <field name="signature_transaction_count_this_year"/>
+                                <field name="client_count"/>
+                                <field name="pending_transactions"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="current_transaction_price"/>
+                                <field name="forecast_transaction_price"/>
+                            </group>
+                            <group>
+                                <field name="paid_transactions_this_year"/>
+                                <field name="overpaid"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_partner_signature_snapshot_search" model="ir.ui.view">
+            <field name="name">partner.signature.snapshot.search</field>
+            <field name="model">partner.signature.snapshot</field>
+            <field name="arch" type="xml">
+                <search string="Partner Signature Snapshots">
+                    <field name="partner_id"/>
+                    <field name="snapshot_date"/>
+                    <filter string="This Year" name="this_year" 
+                            domain="[('snapshot_date', '&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-01-01'))]"/>
+                    <filter string="This Month" name="this_month" 
+                            domain="[('snapshot_date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                    <filter string="Latest Snapshot" name="latest" 
+                            domain="[('snapshot_date', '=', (context_today()).strftime('%Y-%m-%d'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'snapshot_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Pivot View for Reporting -->
+        <record id="view_partner_signature_snapshot_pivot" model="ir.ui.view">
+            <field name="name">partner.signature.snapshot.pivot</field>
+            <field name="model">partner.signature.snapshot</field>
+            <field name="arch" type="xml">
+                <pivot string="Partner Statistics Analysis">
+                    <field name="partner_name" type="row"/>
+                    <field name="snapshot_date" interval="month" type="col"/>
+                    <field name="signature_transaction_count_this_year" type="measure"/>
+                    <field name="pending_transactions" type="measure"/>
+                    <field name="paid_transactions_this_year" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Graph View for Reporting -->
+        <record id="view_partner_signature_snapshot_graph" model="ir.ui.view">
+            <field name="name">partner.signature.snapshot.graph</field>
+            <field name="model">partner.signature.snapshot</field>
+            <field name="arch" type="xml">
+                <graph string="Partner Statistics Chart" type="line">
+                    <field name="snapshot_date" interval="month"/>
+                    <field name="signature_transaction_count_this_year" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_partner_signature_snapshot" model="ir.actions.act_window">
+            <field name="name">Partners</field>
+            <field name="res_model">partner.signature.snapshot</field>
+            <field name="view_mode">list,form,pivot,graph</field>
+            <field name="context">{'search_default_latest': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No partner snapshots yet
+                </p>
+                <p>
+                    Click "Update Partner Snapshots" to create snapshots for all partners.
+                    Snapshots are also created automatically by the daily scheduled action.
+                </p>
+            </field>
+        </record>
+
+        <!-- Server Action for Update Button -->
+        <record id="action_update_partner_snapshots" model="ir.actions.server">
+            <field name="name">Update Partner Snapshots</field>
+            <field name="model_id" ref="model_partner_signature_snapshot"/>
+            <field name="binding_model_id" ref="model_partner_signature_snapshot"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+action = model.create_snapshots()
+            </field>
+        </record>
+
+        <!-- Direct Action for Update Button (visible as menu item) -->
+        <record id="action_update_snapshots_direct" model="ir.actions.server">
+            <field name="name">⟳ Update Snapshots Now</field>
+            <field name="model_id" ref="model_partner_signature_snapshot"/>
+            <field name="state">code</field>
+            <field name="code">
+model.create_snapshots()
+action = {
+    'type': 'ir.actions.client',
+    'tag': 'display_notification',
+    'params': {
+        'title': 'Success',
+        'message': 'Partner snapshots updated successfully! Refresh the page to see new data.',
+        'type': 'success',
+        'sticky': False,
+        'next': {'type': 'ir.actions.act_window_close'},
+    }
+}
+            </field>
+        </record>
+
+        <!-- Menu Item under Sales -->
+        <menuitem id="menu_partner_signature_snapshot"
+                  name="Partners"
+                  parent="sale.sale_menu_root"
+                  action="action_partner_signature_snapshot"
+                  sequence="50"/>
+
+        <!-- Menu Item for Update Action -->
+        <menuitem id="menu_update_partner_snapshots"
+                  name="⟳ Update Partner Snapshots"
+                  parent="sale.sale_menu_root"
+                  action="action_update_snapshots_direct"
+                  sequence="51"/>
+
+    </data>
+</odoo>

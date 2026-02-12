@@ -38,8 +38,10 @@
                             <group>
                                 <field name="signature_transaction_count" readonly="1"/>
                                 <field name="signature_transaction_count_this_year" readonly="1"/>
+                                <field name="pending_transactions" readonly="1" string="Pending Transactions Order"/>
                                 <field name="client_count" readonly="1"/>
                                 <field name="current_transaction_price" readonly="1"/>
+                                <field name="forecast_transaction_price" readonly="1"/>
                                 <field name="paid_transactions_this_year" readonly="1"/>
                                 <field name="overpaid" readonly="1"/>
                             </group>
