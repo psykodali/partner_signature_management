@@ -64,3 +64,23 @@ class PartnerSignatureSnapshot(models.Model):
                 self.create(snapshot_vals)
         
         return True
+    
+    def action_update_all_snapshots(self):
+        """
+        Button action to manually trigger snapshot creation for all partners.
+        Shows a notification when complete.
+        """
+        self.create_snapshots()
+        
+        # Return notification
+        return {
+            'type': 'ir.actions.client',
+            'tag': 'display_notification',
+            'params': {
+                'title': 'Success',
+                'message': 'Partner snapshots have been updated successfully!',
+                'type': 'success',
+                'sticky': False,
+            }
+        }
+

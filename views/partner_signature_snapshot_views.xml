@@ -7,6 +7,9 @@
             <field name="model">partner.signature.snapshot</field>
             <field name="arch" type="xml">
                 <list string="Partner Signature Snapshots">
+                    <header>
+                        <button name="action_update_all_snapshots" string="Update Partner Snapshots" type="object" class="oe_highlight"/>
+                    </header>
                     <field name="snapshot_date"/>
                     <field name="partner_name"/>
                     <field name="signature_transaction_count"/>
@@ -25,6 +28,9 @@
             <field name="model">partner.signature.snapshot</field>
             <field name="arch" type="xml">
                 <form string="Partner Signature Snapshot">
+                    <header>
+                        <button name="action_update_all_snapshots" string="Update All Partner Snapshots" type="object" class="oe_highlight"/>
+                    </header>
                     <sheet>
                         <group>
                             <group>
@@ -67,6 +73,8 @@
                             domain="[('snapshot_date', '&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-01-01'))]"/>
                     <filter string="This Month" name="this_month" 
                             domain="[('snapshot_date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                    <filter string="Latest Snapshot" name="latest" 
+                            domain="[('snapshot_date', '=', (context_today()).strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
                         <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}"/>
                         <filter string="Date" name="group_date" context="{'group_by': 'snapshot_date'}"/>
@@ -104,27 +112,27 @@
 
         <!-- Action -->
         <record id="action_partner_signature_snapshot" model="ir.actions.act_window">
-            <field name="name">Partner Statistics Snapshots</field>
+            <field name="name">Partners</field>
             <field name="res_model">partner.signature.snapshot</field>
             <field name="view_mode">list,form,pivot,graph</field>
-            <field name="context">{'search_default_this_year': 1}</field>
+            <field name="context">{'search_default_latest': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create your first snapshot
+                    No partner snapshots yet
                 </p>
                 <p>
-                    Snapshots are created automatically by the scheduled action.
-                    They provide historical data for reporting and analysis.
+                    Click "Update Partner Snapshots" to create snapshots for all partners.
+                    Snapshots are also created automatically by the daily scheduled action.
                 </p>
             </field>
         </record>
 
-        <!-- Menu Item -->
+        <!-- Menu Item under Sales > Reporting -->
         <menuitem id="menu_partner_signature_snapshot"
-                  name="Partner Statistics"
-                  parent="sale.sale_menu_root"
+                  name="Partners"
+                  parent="sale.sale_report_menu"
                   action="action_partner_signature_snapshot"
-                  sequence="30"/>
+                  sequence="50"/>
 
     </data>
 </odoo>
