@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Tree View -->
+        <record id="view_partner_signature_snapshot_tree" model="ir.ui.view">
+            <field name="name">partner.signature.snapshot.tree</field>
+            <field name="model">partner.signature.snapshot</field>
+            <field name="arch" type="xml">
+                <list string="Partner Signature Snapshots">
+                    <field name="snapshot_date"/>
+                    <field name="partner_name"/>
+                    <field name="signature_transaction_count"/>
+                    <field name="signature_transaction_count_this_year"/>
+                    <field name="pending_transactions"/>
+                    <field name="forecast_transaction_price"/>
+                    <field name="paid_transactions_this_year"/>
+                    <field name="overpaid"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form View -->
+        <record id="view_partner_signature_snapshot_form" model="ir.ui.view">
+            <field name="name">partner.signature.snapshot.form</field>
+            <field name="model">partner.signature.snapshot</field>
+            <field name="arch" type="xml">
+                <form string="Partner Signature Snapshot">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="partner_id"/>
+                                <field name="snapshot_date"/>
+                                <field name="is_partner"/>
+                                <field name="partnership_status"/>
+                            </group>
+                            <group>
+                                <field name="signature_transaction_count"/>
+                                <field name="signature_transaction_count_this_year"/>
+                                <field name="client_count"/>
+                                <field name="pending_transactions"/>
+                            </group>
+                        </group>
+                        <group>
+                            <group>
+                                <field name="current_transaction_price"/>
+                                <field name="forecast_transaction_price"/>
+                            </group>
+                            <group>
+                                <field name="paid_transactions_this_year"/>
+                                <field name="overpaid"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Search View -->
+        <record id="view_partner_signature_snapshot_search" model="ir.ui.view">
+            <field name="name">partner.signature.snapshot.search</field>
+            <field name="model">partner.signature.snapshot</field>
+            <field name="arch" type="xml">
+                <search string="Partner Signature Snapshots">
+                    <field name="partner_id"/>
+                    <field name="snapshot_date"/>
+                    <filter string="This Year" name="this_year" 
+                            domain="[('snapshot_date', '&gt;=', (context_today() - relativedelta(years=1)).strftime('%Y-01-01'))]"/>
+                    <filter string="This Month" name="this_month" 
+                            domain="[('snapshot_date', '&gt;=', (context_today() - relativedelta(months=1)).strftime('%Y-%m-01'))]"/>
+                    <group expand="0" string="Group By">
+                        <filter string="Partner" name="group_partner" context="{'group_by': 'partner_id'}"/>
+                        <filter string="Date" name="group_date" context="{'group_by': 'snapshot_date'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <!-- Pivot View for Reporting -->
+        <record id="view_partner_signature_snapshot_pivot" model="ir.ui.view">
+            <field name="name">partner.signature.snapshot.pivot</field>
+            <field name="model">partner.signature.snapshot</field>
+            <field name="arch" type="xml">
+                <pivot string="Partner Statistics Analysis">
+                    <field name="partner_name" type="row"/>
+                    <field name="snapshot_date" interval="month" type="col"/>
+                    <field name="signature_transaction_count_this_year" type="measure"/>
+                    <field name="pending_transactions" type="measure"/>
+                    <field name="paid_transactions_this_year" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- Graph View for Reporting -->
+        <record id="view_partner_signature_snapshot_graph" model="ir.ui.view">
+            <field name="name">partner.signature.snapshot.graph</field>
+            <field name="model">partner.signature.snapshot</field>
+            <field name="arch" type="xml">
+                <graph string="Partner Statistics Chart" type="line">
+                    <field name="snapshot_date" interval="month"/>
+                    <field name="signature_transaction_count_this_year" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Action -->
+        <record id="action_partner_signature_snapshot" model="ir.actions.act_window">
+            <field name="name">Partner Statistics Snapshots</field>
+            <field name="res_model">partner.signature.snapshot</field>
+            <field name="view_mode">list,form,pivot,graph</field>
+            <field name="context">{'search_default_this_year': 1}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create your first snapshot
+                </p>
+                <p>
+                    Snapshots are created automatically by the scheduled action.
+                    They provide historical data for reporting and analysis.
+                </p>
+            </field>
+        </record>
+
+        <!-- Menu Item -->
+        <menuitem id="menu_partner_signature_snapshot"
+                  name="Partner Statistics"
+                  parent="sale.sale_menu_root"
+                  action="action_partner_signature_snapshot"
+                  sequence="30"/>
+
+    </data>
+</odoo>

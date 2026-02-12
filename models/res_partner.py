@@ -58,50 +58,15 @@ class ResPartner(models.Model):
     pending_transactions = fields.Integer(
         string='Pending Transactions (Children)',
         compute='_compute_pending_transactions',
-        store=True
+        store=False
     )
     
     forecast_transaction_price = fields.Float(
         string='Transaction Price Forecast',
         compute='_compute_forecast_transaction_price',
-        store=True,
+        store=False,
         digits=(10, 4)
     )
-
-    def _auto_init(self):
-        """
-        Override to ensure columns exist before Odoo tries to use them.
-        This prevents 'column does not exist' errors during server startup.
-        """
-        # Ensure columns exist before calling super()
-        cr = self.env.cr
-        
-        # Check and create pending_transactions column
-        cr.execute("""
-            SELECT column_name 
-            FROM information_schema.columns 
-            WHERE table_name='res_partner' AND column_name='pending_transactions'
-        """)
-        if not cr.fetchone():
-            cr.execute("""
-                ALTER TABLE res_partner 
-                ADD COLUMN pending_transactions INTEGER
-            """)
-        
-        # Check and create forecast_transaction_price column
-        cr.execute("""
-            SELECT column_name 
-            FROM information_schema.columns 
-            WHERE table_name='res_partner' AND column_name='forecast_transaction_price'
-        """)
-        if not cr.fetchone():
-            cr.execute("""
-                ALTER TABLE res_partner 
-                ADD COLUMN forecast_transaction_price NUMERIC(10,4)
-            """)
-        
-        return super()._auto_init()
-
 
     @api.depends('child_ids.sale_order_ids.state', 'child_ids.sale_order_ids.order_line.product_id.is_signature_pack')
     def _compute_signature_transaction_count(self):
