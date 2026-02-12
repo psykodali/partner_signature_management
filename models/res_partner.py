@@ -59,38 +59,38 @@ class ResPartner(models.Model):
     own_signature_transaction_count = fields.Integer(
         string='Own Signature Count (All Time)',
         compute='_compute_own_signature_transaction_count',
-        store=False
+        store=True
     )
     
     own_signature_transaction_count_this_year = fields.Integer(
         string='Own Signature Count This Year',
         compute='_compute_own_signature_transaction_count_this_year',
-        store=False
+        store=True
     )
     
     own_paid_transactions_this_year = fields.Float(
         string='Own Paid Transactions This Year',
         compute='_compute_own_paid_transactions_this_year',
-        store=False,
+        store=True,
         digits=(10, 2)
     )
     
     own_pending_transactions = fields.Integer(
         string='Own Pending Transactions',
         compute='_compute_own_pending_transactions',
-        store=False
+        store=True
     )
     
     pending_transactions = fields.Integer(
         string='Pending Transactions (Children)',
         compute='_compute_pending_transactions',
-        store=False
+        store=True
     )
     
     forecast_transaction_price = fields.Float(
         string='Transaction Price Forecast',
         compute='_compute_forecast_transaction_price',
-        store=False,
+        store=True,
         digits=(10, 4)
     )
 
