@@ -58,13 +58,13 @@ class ResPartner(models.Model):
     pending_transactions = fields.Integer(
         string='Pending Transactions (Children)',
         compute='_compute_pending_transactions',
-        store=False
+        store=True
     )
     
     forecast_transaction_price = fields.Float(
         string='Transaction Price Forecast',
         compute='_compute_forecast_transaction_price',
-        store=False,
+        store=True,
         digits=(10, 4)
     )
 
