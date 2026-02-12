@@ -55,42 +55,16 @@ class ResPartner(models.Model):
         digits=(10, 2)
     )
     
-    # Own subscription fields (for direct orders on this contact)
-    own_signature_transaction_count = fields.Integer(
-        string='Own Signature Count (All Time)',
-        compute='_compute_own_signature_transaction_count',
-        store=True
-    )
-    
-    own_signature_transaction_count_this_year = fields.Integer(
-        string='Own Signature Count This Year',
-        compute='_compute_own_signature_transaction_count_this_year',
-        store=True
-    )
-    
-    own_paid_transactions_this_year = fields.Float(
-        string='Own Paid Transactions This Year',
-        compute='_compute_own_paid_transactions_this_year',
-        store=True,
-        digits=(10, 2)
-    )
-    
-    own_pending_transactions = fields.Integer(
-        string='Own Pending Transactions',
-        compute='_compute_own_pending_transactions',
-        store=True
-    )
-    
     pending_transactions = fields.Integer(
         string='Pending Transactions (Children)',
         compute='_compute_pending_transactions',
-        store=True
+        store=False
     )
     
     forecast_transaction_price = fields.Float(
         string='Transaction Price Forecast',
         compute='_compute_forecast_transaction_price',
-        store=True,
+        store=False,
         digits=(10, 4)
     )
 
@@ -197,96 +171,6 @@ class ResPartner(models.Model):
             should_pay = partner.current_transaction_price * partner.signature_transaction_count_this_year
             # Calculate overpaid amount
             partner.overpaid = partner.paid_transactions_this_year - should_pay
-
-    @api.depends('sale_order_ids.state', 'sale_order_ids.order_line.product_id.is_signature_pack')
-    def _compute_own_signature_transaction_count(self):
-        """Calculate signature count from this contact's own orders (not children)"""
-        for partner in self:
-            count = 0
-            # Find confirmed sales orders directly on this partner
-            domain = [
-                ('partner_id', '=', partner.id),
-                ('state', '=', 'sale')  # confirmed orders
-            ]
-            orders = self.env['sale.order'].search(domain)
-            
-            for order in orders:
-                for line in order.order_line:
-                    if line.product_id.is_signature_pack:
-                        sig_count = line.product_id.signature_count or 0
-                        count += (line.product_uom_qty * sig_count)
-            
-            partner.own_signature_transaction_count = count
-
-    @api.depends('sale_order_ids.state', 'sale_order_ids.order_line.product_id.is_signature_pack', 'sale_order_ids.date_order')
-    def _compute_own_signature_transaction_count_this_year(self):
-        """Calculate signature count from this contact's own orders this year"""
-        from datetime import datetime
-        for partner in self:
-            count = 0
-            current_year = datetime.now().year
-            # Find confirmed sales orders directly on this partner from this year
-            domain = [
-                ('partner_id', '=', partner.id),
-                ('state', '=', 'sale'),
-                ('date_order', '>=', f'{current_year}-01-01'),
-                ('date_order', '<=', f'{current_year}-12-31')
-            ]
-            orders = self.env['sale.order'].search(domain)
-            
-            for order in orders:
-                for line in order.order_line:
-                    if line.product_id.is_signature_pack:
-                        sig_count = line.product_id.signature_count or 0
-                        count += (line.product_uom_qty * sig_count)
-            
-            partner.own_signature_transaction_count_this_year = count
-
-    @api.depends('sale_order_ids.state', 'sale_order_ids.order_line.price_subtotal', 'sale_order_ids.date_order')
-    def _compute_own_paid_transactions_this_year(self):
-        """Calculate paid amount from this contact's own orders this year (excluding VAT)"""
-        from datetime import datetime
-        for partner in self:
-            total_paid = 0.0
-            current_year = datetime.now().year
-            # Find confirmed sales orders directly on this partner from this year
-            domain = [
-                ('partner_id', '=', partner.id),
-                ('state', '=', 'sale'),
-                ('date_order', '>=', f'{current_year}-01-01'),
-                ('date_order', '<=', f'{current_year}-12-31')
-            ]
-            orders = self.env['sale.order'].search(domain)
-            
-            for order in orders:
-                for line in order.order_line:
-                    # Include signature pack lines, exclude discount lines
-                    if line.product_id.is_signature_pack:
-                        # Check if the line has the discount reference
-                        if not (hasattr(line, 'name') and 'transaction-plan-upgrade-discount' in (line.name or '')):
-                            total_paid += line.price_subtotal
-            
-            partner.own_paid_transactions_this_year = total_paid
-
-    @api.depends('sale_order_ids.state', 'sale_order_ids.order_line.product_id.is_signature_pack')
-    def _compute_own_pending_transactions(self):
-        """Calculate pending signature count from this contact's own orders (not confirmed, not cancelled)"""
-        for partner in self:
-            count = 0
-            # Find pending sales orders directly on this partner (draft, sent)
-            domain = [
-                ('partner_id', '=', partner.id),
-                ('state', 'in', ['draft', 'sent'])  # not confirmed, not cancelled
-            ]
-            orders = self.env['sale.order'].search(domain)
-            
-            for order in orders:
-                for line in order.order_line:
-                    if line.product_id.is_signature_pack:
-                        sig_count = line.product_id.signature_count or 0
-                        count += (line.product_uom_qty * sig_count)
-            
-            partner.own_pending_transactions = count
 
     @api.depends('child_ids.sale_order_ids.state', 'child_ids.sale_order_ids.order_line.product_id.is_signature_pack')
     def _compute_pending_transactions(self):

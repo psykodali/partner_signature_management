@@ -15,10 +15,6 @@ def migrate(cr, version):
         # Recompute all partner fields if they exist
         Partner = env['res.partner']
         fields_to_compute = [
-            'own_signature_transaction_count',
-            'own_signature_transaction_count_this_year',
-            'own_paid_transactions_this_year',
-            'own_pending_transactions',
             'pending_transactions',
             'forecast_transaction_price'
         ]
