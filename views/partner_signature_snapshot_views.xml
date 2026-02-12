@@ -127,10 +127,10 @@
             </field>
         </record>
 
-        <!-- Menu Item under Sales > Reporting -->
+        <!-- Menu Item under Sales -->
         <menuitem id="menu_partner_signature_snapshot"
                   name="Partners"
-                  parent="sale.sale_report_menu"
+                  parent="sale.sale_menu_root"
                   action="action_partner_signature_snapshot"
                   sequence="50"/>
 
